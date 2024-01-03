@@ -1,0 +1,33 @@
+from heapq import heappush, heappop
+from math import inf
+
+
+def dijkstra(graph, start, end, n):
+    graph_dist = [inf] * (n + 1)
+    graph_dist[start] = 0
+    queue = [(0, start)]
+    while queue:
+        distance, num_v = heappop(queue)
+        if distance > graph_dist[num_v] or graph[num_v] == 0:
+            continue
+        for neighbor, dist in graph[num_v]:
+            temp_distance = graph_dist[num_v] + dist
+            if graph_dist[neighbor] > temp_distance:
+                graph_dist[neighbor] = temp_distance
+                heappush(queue, (temp_distance, neighbor))
+    return graph_dist[end] if graph_dist[end] != inf else -1
+
+
+n, k = map(int, input().split())
+ghaph = [0] * (n + 1)
+for _ in range(k):
+    a, b, l = map(int, input().split())
+    if not ghaph[a]:
+        ghaph[a] = []
+    if not ghaph[b]:
+        ghaph[b] = []
+    ghaph[a].append((b, l))
+    ghaph[b].append((a, l))
+
+a, b = map(int, input().split())
+print(dijkstra(ghaph, a, b, n))
